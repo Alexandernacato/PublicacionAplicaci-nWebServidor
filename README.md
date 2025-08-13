@@ -1,31 +1,51 @@
-"# PublicacionAplicaci-nWebServidor" 
-#!/bin/bash
+```bash
+################################################################################
+# 🚀 Script Profesional para Desplegar Sistema Productos y Categorías con Docker
+# Autor: Alexander
+# Fecha: 2025-08-12
+################################################################################
 
-# 🚀 Script completo para desplegar el sistema Productos y Categorías con Docker Compose
-#    En AWS EC2 Ubuntu 22.04 o cualquier Ubuntu compatible
-#    Autor: Alexander
-#    Fecha: 2025-08-12
+GREEN="\033[1;32m"
+YELLOW="\033[1;33m"
+CYAN="\033[1;36m"
+RED="\033[1;31m"
+NC="\033[0m" # Sin color
 
-set -e  # Detener script si hay error
+set -e  # Terminar al primer error
 
-echo "1️⃣ Actualizando sistema operativo..."
+echo -e "${CYAN}#############################################################${NC}"
+echo -e "${CYAN}#      Iniciando despliegue Sistema Productos y Categorías   #${NC}"
+echo -e "${CYAN}#############################################################${NC}"
+echo
+
+# Función para imprimir pasos
+function print_step() {
+    echo -e "${YELLOW}➡️  Paso $1: $2${NC}"
+}
+
+print_step 1 "Actualizando sistema operativo y paquetes..."
 sudo apt update && sudo apt upgrade -y
-echo "   Sistema actualizado."
+echo -e "${GREEN}✔ Sistema actualizado correctamente.${NC}"
+echo
 
-echo "2️⃣ Instalando Docker y Docker Compose..."
+print_step 2 "Instalando Docker y Docker Compose..."
 sudo apt install -y docker.io docker-compose
-echo "   Docker y Docker Compose instalados."
+echo -e "${GREEN}✔ Docker y Docker Compose instalados.${NC}"
+echo
 
-echo "3️⃣ Habilitando y arrancando Docker automáticamente..."
+print_step 3 "Habilitando Docker para inicio automático y arrancándolo ahora..."
 sudo systemctl enable docker --now
-echo "   Docker activo y habilitado para inicio automático."
+echo -e "${GREEN}✔ Docker está activo y habilitado.${NC}"
+echo
 
-echo "4️⃣ Agregando usuario actual ($USER) al grupo docker para evitar usar sudo en comandos docker..."
+print_step 4 "Agregando usuario '$USER' al grupo 'docker' para evitar usar sudo..."
 sudo usermod -aG docker $USER
-echo "   Usuario agregado al grupo docker."
-echo "   ⚠️ IMPORTANTE: Cierra sesión SSH y vuelve a conectar para aplicar este cambio."
+echo -e "${GREEN}✔ Usuario agregado al grupo docker.${NC}"
+echo -e "${RED}⚠️ IMPORTANTE: Cierra sesión SSH y vuelve a conectar para aplicar cambios.${NC}"
+echo
 
-echo "5️⃣ Creando archivo docker-compose.yml con la configuración del proyecto..."
+print_step 5 "Creando archivo ${CYAN}docker-compose.yml${NC} con configuración de servicios..."
+
 cat > docker-compose.yml << EOF
 version: "3.8"
 
@@ -96,50 +116,26 @@ networks:
   backend:
     driver: bridge
 EOF
-echo "   Archivo docker-compose.yml creado correctamente."
 
-echo "6️⃣ Levantando los contenedores en modo desacoplado (detached)..."
+echo -e "${GREEN}✔ Archivo docker-compose.yml creado exitosamente.${NC}"
+echo
+
+print_step 6 "Levantando los contenedores con Docker Compose (modo detached)..."
 docker-compose up -d
-echo "   Contenedores levantados exitosamente."
+echo -e "${GREEN}✔ Contenedores levantados correctamente.${NC}"
+echo
 
-echo "
-✅ ¡Despliegue completado!
+echo -e "${CYAN}##########################################${NC}"
+echo -e "${CYAN}#       DESPLIEGUE FINALIZADO             #${NC}"
+echo -e "${CYAN}##########################################${NC}"
+echo
+echo -e "✅ Recuerda:"
+echo -e "  - Cierra tu sesión SSH y vuelve a entrar para aplicar los cambios de grupo docker."
+echo -e "  - Verifica que los contenedores estén corriendo con: ${YELLOW}docker ps${NC}"
+echo -e "  - Accede al frontend en: ${YELLOW}http://<IP_PUBLICA_EC2>:8080${NC}"
+echo
+echo -e "${CYAN}Gracias por usar este script. ¡Éxito con tu proyecto! 🚀${NC}"
+echo
 
-▶️ Recuerda:
-  - Después de ejecutar este script, cierra tu sesión SSH y vuelve a entrar para que el grupo docker se aplique correctamente y puedas usar docker sin sudo.
-  - Para verificar que los contenedores están corriendo, ejecuta: docker ps
-  - Accede al frontend desde tu navegador en: http://<IP_PUBLICA_EC2>:8080
-"
-
-# --- Explicación rápida en comentarios para tu entendimiento ---
-
-: '
-1️⃣ Actualización del sistema:
-   sudo apt update && sudo apt upgrade -y
-   Esto actualiza la lista de paquetes y actualiza el sistema a versiones recientes.
-
-2️⃣ Instalación Docker y Docker Compose:
-   sudo apt install -y docker.io docker-compose
-   Instala Docker (motor de contenedores) y Docker Compose (orquestador multi-contenedores).
-
-3️⃣ Habilitar Docker al inicio y arrancar ahora:
-   sudo systemctl enable docker --now
-   Para que Docker se inicie siempre al prender la máquina.
-
-4️⃣ Añadir usuario al grupo docker:
-   sudo usermod -aG docker $USER
-   Permite usar docker sin sudo (aplica después de reiniciar sesión).
-
-5️⃣ Crear docker-compose.yml:
-   Definimos servicios:
-   - mysql (base de datos)
-   - categoria (backend)
-   - producto (backend)
-   - catalogo-frontend (frontend)
-   Creamos volumen para persistencia y red para comunicación.
-
-6️⃣ Levantar contenedores:
-   docker-compose up -d
-   Ejecuta contenedores en segundo plano (no bloquea terminal).
-'
-
+# Fin del script
+```
