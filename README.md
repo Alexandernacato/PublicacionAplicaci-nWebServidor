@@ -107,4 +107,4 @@ docker ps
 # 6. Acceder al frontend
 # ----------------------------------------
 # Abre tu navegador y visita:
-# http://<IP_DEL_SERVIDOR>:8080
+# http://18.217.161.121:8080
