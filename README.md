@@ -1,50 +1,81 @@
+# 🚀 Despliegue Completo con Docker Compose  
+## Sistema Productos y Categorías  
+
+---
+
+### 📅 Autor: Alexander  
+### 📍 Fecha: 2025-08-12  
+
+---
+
+## 📖 Índice
+
+- [Descripción](#descripción)  
+- [Script Bash para despliegue](#script-bash-para-despliegue)  
+- [Explicación paso a paso](#explicación-paso-a-paso)  
+- [Cómo ejecutar el script](#cómo-ejecutar-el-script)  
+- [Notas importantes](#notas-importantes)  
+
+---
+
+## 📄 Descripción  
+
+Este script automatiza la instalación de Docker, la creación del archivo `docker-compose.yml` con tus servicios (MySQL, backend categorías y productos, frontend Angular) y levanta los contenedores en modo detached.  
+Ideal para máquinas Ubuntu (como una instancia EC2 en AWS).
+
+---
+
+## 🖥️ Script Bash para despliegue  
+
 ```bash
+#!/bin/bash
+
 ################################################################################
 # 🚀 Script Profesional para Desplegar Sistema Productos y Categorías con Docker
 # Autor: Alexander
 # Fecha: 2025-08-12
 ################################################################################
 
+# Colores para resaltar mensajes
 GREEN="\033[1;32m"
 YELLOW="\033[1;33m"
 CYAN="\033[1;36m"
 RED="\033[1;31m"
 NC="\033[0m" # Sin color
 
-set -e  # Terminar al primer error
+set -e  # Detener al primer error
 
 echo -e "${CYAN}#############################################################${NC}"
 echo -e "${CYAN}#      Iniciando despliegue Sistema Productos y Categorías   #${NC}"
 echo -e "${CYAN}#############################################################${NC}"
 echo
 
-# Función para imprimir pasos
 function print_step() {
     echo -e "${YELLOW}➡️  Paso $1: $2${NC}"
 }
 
-print_step 1 "Actualizando sistema operativo y paquetes..."
+print_step 1 "Actualizar sistema operativo y paquetes..."
 sudo apt update && sudo apt upgrade -y
 echo -e "${GREEN}✔ Sistema actualizado correctamente.${NC}"
 echo
 
-print_step 2 "Instalando Docker y Docker Compose..."
+print_step 2 "Instalar Docker y Docker Compose..."
 sudo apt install -y docker.io docker-compose
 echo -e "${GREEN}✔ Docker y Docker Compose instalados.${NC}"
 echo
 
-print_step 3 "Habilitando Docker para inicio automático y arrancándolo ahora..."
+print_step 3 "Habilitar y arrancar Docker automáticamente..."
 sudo systemctl enable docker --now
-echo -e "${GREEN}✔ Docker está activo y habilitado.${NC}"
+echo -e "${GREEN}✔ Docker activo y habilitado.${NC}"
 echo
 
-print_step 4 "Agregando usuario '$USER' al grupo 'docker' para evitar usar sudo..."
+print_step 4 "Agregar usuario '$USER' al grupo docker para usar docker sin sudo..."
 sudo usermod -aG docker $USER
 echo -e "${GREEN}✔ Usuario agregado al grupo docker.${NC}"
-echo -e "${RED}⚠️ IMPORTANTE: Cierra sesión SSH y vuelve a conectar para aplicar cambios.${NC}"
+echo -e "${RED}⚠️ Recuerda cerrar sesión SSH y volver a entrar para aplicar cambios.${NC}"
 echo
 
-print_step 5 "Creando archivo ${CYAN}docker-compose.yml${NC} con configuración de servicios..."
+print_step 5 "Crear archivo docker-compose.yml con configuración del proyecto..."
 
 cat > docker-compose.yml << EOF
 version: "3.8"
@@ -120,22 +151,19 @@ EOF
 echo -e "${GREEN}✔ Archivo docker-compose.yml creado exitosamente.${NC}"
 echo
 
-print_step 6 "Levantando los contenedores con Docker Compose (modo detached)..."
+print_step 6 "Levantar contenedores con Docker Compose (modo detached)..."
 docker-compose up -d
 echo -e "${GREEN}✔ Contenedores levantados correctamente.${NC}"
 echo
 
 echo -e "${CYAN}##########################################${NC}"
-echo -e "${CYAN}#       DESPLIEGUE FINALIZADO             #${NC}"
+echo -e "${CYAN}#           DESPLIEGUE FINALIZADO         #${NC}"
 echo -e "${CYAN}##########################################${NC}"
 echo
 echo -e "✅ Recuerda:"
-echo -e "  - Cierra tu sesión SSH y vuelve a entrar para aplicar los cambios de grupo docker."
-echo -e "  - Verifica que los contenedores estén corriendo con: ${YELLOW}docker ps${NC}"
-echo -e "  - Accede al frontend en: ${YELLOW}http://<IP_PUBLICA_EC2>:8080${NC}"
+echo -e "  - Cierra sesión SSH y vuelve a entrar para aplicar permisos de grupo docker."
+echo -e "  - Verifica contenedores activos con: ${YELLOW}docker ps${NC}"
+echo -e "  - Abre el frontend en: ${YELLOW}http://<IP_PUBLICA_EC2>:8080${NC}"
 echo
-echo -e "${CYAN}Gracias por usar este script. ¡Éxito con tu proyecto! 🚀${NC}"
+echo -e "${CYAN}¡Éxito con tu proyecto! 🚀${NC}"
 echo
-
-# Fin del script
-```
