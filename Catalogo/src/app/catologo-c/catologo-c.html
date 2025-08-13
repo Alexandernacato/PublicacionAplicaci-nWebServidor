@@ -1,0 +1,70 @@
+<app-nav></app-nav>
+
+<h2 style="text-align: center; margin-top: 1rem;"> Catálogo de Categorías</h2>
+
+<div class="catalogo">
+  <app-categories
+    [categories]="categorias"
+    [searchTerm]="searchTerm"
+    (onNuevo)="abrirModalParaNuevo()"
+    (onEditar)="abrirModalParaEditar($event)"
+    (onEliminar)="eliminarCategoria($event)"
+  ></app-categories>
+</div>
+
+<!-- Modal -->
+<div class="modal-backdrop" *ngIf="mostrarModal">
+  <div class="modal">
+    <h3 class="modal-title">{{ categoriaSeleccionada.id ? 'Editar Categoría' : 'Nueva Categoría' }}</h3>
+    <form (ngSubmit)="guardarCategoria()" #form="ngForm" novalidate>
+  <div class="form-group">
+    <label for="nombre">Nombre</label>
+    <input
+      type="text"
+      id="nombre"
+      placeholder="Nombre"
+      [(ngModel)]="categoriaSeleccionada.nombre"
+      name="nombre"
+      required
+      minlength="3"
+      maxlength="50"
+      #nombreCtrl="ngModel"
+    />
+    <!-- Mensajes de validación -->
+    <div class="error" *ngIf="nombreCtrl.invalid && nombreCtrl.touched">
+      <small *ngIf="nombreCtrl.errors?.['required']">
+        El nombre es obligatorio.
+      </small>
+      <small *ngIf="nombreCtrl.errors?.['minlength']">
+        El nombre debe tener al menos 3 caracteres.
+      </small>
+      <small *ngIf="nombreCtrl.errors?.['maxlength']">
+        El nombre no puede superar los 50 caracteres.
+      </small>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="descripcion">Descripción</label>
+    <textarea
+      id="descripcion"
+      placeholder="Descripción"
+      [(ngModel)]="categoriaSeleccionada.descripcion"
+      name="descripcion"
+      maxlength="255"
+      #descripcionCtrl="ngModel"
+    ></textarea>
+    <div class="error" *ngIf="descripcionCtrl.invalid && descripcionCtrl.touched">
+      <small *ngIf="descripcionCtrl.errors?.['maxlength']">
+        La descripción no puede superar los 255 caracteres.
+      </small>
+    </div>
+  </div>
+
+  <div class="modal-buttons">
+    <button type="submit" class="btn btn-create" [disabled]="form.invalid">Guardar</button>
+    <button type="button" class="btn btn-cancel" (click)="cerrarModal()">Cancelar</button>
+  </div>
+</form>
+  </div>
+</div>

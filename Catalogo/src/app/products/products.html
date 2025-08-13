@@ -1,0 +1,49 @@
+<div class="container">
+  <div class="card">
+    <div class="card-header">
+      <h2>📦 Lista de Productos</h2>
+      <div class="header-controls">
+        <input
+          type="text"
+          class="search-input"
+          placeholder="🔍 Buscar producto..."
+          [(ngModel)]="searchTerm"
+        />
+        <button class="btn btn-create" (click)="abrirNuevo()">➕ Crear Producto</button>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <table class="product-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Precio</th>
+            <th>Categoría</th>
+          
+            <th class="text-center">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of filteredProducts(); let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ p.name }}</td>
+            <td>{{ p.description }}</td>
+            <td>{{ p.price | currency:'USD' }}</td>
+            <td>{{ p.categoryName || 'Sin categoría' }}</td>
+            
+            <td class="text-center">
+              <button class="btn btn-edit" (click)="editarProducto(p)">✏️ Editar</button>
+              <button class="btn btn-delete" (click)="eliminarProducto(p)">🗑️ Eliminar</button>
+            </td>
+          </tr>
+          <tr *ngIf="filteredProducts().length === 0">
+            <td colspan="5" class="text-center empty-msg">No se encontraron productos</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

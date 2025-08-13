@@ -1,0 +1,46 @@
+<div class="container">
+  <div class="card">
+    <div class="card-header">
+      <h2>📂 Lista de Categorías</h2>
+      <div class="header-controls">
+        <input
+          type="text"
+          class="search-input"
+          placeholder="🔍 Buscar categoría..."
+          [(ngModel)]="searchTerm"
+        />
+        <button class="btn btn-create" (click)="abrirNuevo()">➕ Crear Categoría</button>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <table class="product-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Fecha de creación</th>
+            <th class="text-center">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let c of filteredCategories(); let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ c.nombre }}</td>
+            <td>{{ c.descripcion }}</td>
+            <td>{{ c.fechaCreacion | date: 'short' }}</td>
+            
+            <td class="text-center">
+              <button class="btn btn-edit" (click)="editarCategoria(c)">✏️ Editar</button>
+              <button class="btn btn-delete" (click)="eliminarCategoria(c)">🗑️ Eliminar</button>
+            </td>
+          </tr>
+          <tr *ngIf="filteredCategories().length === 0">
+            <td colspan="5" class="text-center empty-msg">No se encontraron categorías</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

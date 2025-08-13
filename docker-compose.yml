@@ -1,0 +1,68 @@
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: admin123
+      MYSQL_DATABASE: test
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - backend
+
+  categoria:
+    image: alexander553/categoria:latest
+    container_name: categoria
+    restart: unless-stopped
+    ports:
+      - "8084:8084"
+    environment:
+      PORT: 8084
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: test
+      DB_USER: root
+      DB_PASSWORD: admin123
+    depends_on:
+      - mysql
+    networks:
+      - backend
+
+  producto:
+    image: alexander553/producto:latest
+    container_name: producto
+    restart: unless-stopped
+    ports:
+      - "8082:8082"
+    environment:
+      PORT: 8082
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: test
+      DB_USER: root
+      DB_PASSWORD: admin123
+    depends_on:
+      - mysql
+    networks:
+      - backend
+
+  catalogo-frontend:
+    image: alexander553/catalogo1:latest
+    container_name: catalogo-frontend
+    restart: unless-stopped
+    ports:
+      - "8080:80"  # host:container
+    networks:
+      - backend
+
+volumes:
+  mysql_data:
+
+networks:
+  backend:
+    driver: bridge
