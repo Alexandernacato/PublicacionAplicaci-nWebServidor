@@ -88,7 +88,10 @@ git clone https://github.com/alexander553/tu-repositorio.git
 # Entrar a la carpeta del proyecto (ajusta el nombre según tu repo)
 cd tu-repositorio
 ```bash
-scp -i ruta/mi-clave.pem docker-compose.yml usuario@<IP_DEL_SERVIDOR>:/home/usuario/
+Desde tu computadora local, ejecuta el siguiente comando para copiar el archivo `docker-compose.yml` a tu servidor:
+
+```bash
+scp -i /ruta/a/tu-clave.pem docker-compose.yml usuario@<IP_DEL_SERVIDOR>:~/
 
 # ----------------------------------------
 # 4. Levantar los contenedores Docker con docker-compose
